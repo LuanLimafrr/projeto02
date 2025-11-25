@@ -1,21 +1,41 @@
 from django.shortcuts import render, redirect
 from .models import Produto
 from .forms import ProdutoForm
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required, user_passes_test
 
-# --- ÁREA PÚBLICA (CLIENTE) ---
+# --- FUNÇÃO DE SEGURANÇA (O GUARDA-COSTAS) ---
+def checar_se_eh_equipe(user):
+    # Retorna True se o usuário for "Staff" (Equipe/Admin)
+    return user.is_staff
+
+# --- ÁREA PÚBLICA (Qualquer um acessa) ---
+
 def home(request):
     produtos = Produto.objects.filter(disponivel=True)
     return render(request, 'loja/home.html', {'produtos': produtos})
 
-# --- ÁREA DA GERÊNCIA (RESTRITA) ---
-@login_required(login_url='/login/') # Só entra se estiver logado
+def cadastro(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login') # Vai para o login após criar conta
+    else:
+        form = UserCreationForm()
+    
+    return render(request, 'registration/cadastro.html', {'form': form})
+
+# --- ÁREA RESTRITA (Só Equipe acessa) ---
+
+@login_required
+@user_passes_test(checar_se_eh_equipe) # <--- Só passa se for da equipe
 def gerencia_dashboard(request):
-    # Aqui o gerente vê todos os produtos, inclusive os indisponíveis
     produtos = Produto.objects.all()
     return render(request, 'gerencia/dashboard.html', {'produtos': produtos})
 
-@login_required(login_url='/login/')
+@login_required
+@user_passes_test(checar_se_eh_equipe) # <--- Só passa se for da equipe
 def cadastrar_produto(request):
     if request.method == 'POST':
         form = ProdutoForm(request.POST, request.FILES)

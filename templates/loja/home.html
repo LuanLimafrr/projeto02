@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Página Inicial{% endblock %}
+
+{% block content %}
+
+<div class="bg-light p-5 rounded mb-4 text-center">
+    <h1>Bem-vindo à Beija Flor Tintas</h1>
+    <p class="lead">As melhores cores para sua casa você encontra aqui em Nilópolis.</p>
+</div>
+
+<h3 class="mb-4">Nossos Produtos</h3>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for produto in produtos %}
+    <div class="col">
+        <div class="card h-100 shadow-sm">
+            {% if produto.imagem %}
+                <img src="{{ produto.imagem.url }}" class="card-img-top" alt="{{ produto.nome }}" style="height: 200px; object-fit: contain; padding: 10px;">
+            {% else %}
+                <div class="text-center py-5 bg-secondary text-white">Sem Foto</div>
+            {% endif %}
+
+            <div class="card-body">
+                <h5 class="card-title">{{ produto.nome }}</h5>
+                <p class="card-text text-muted">{{ produto.marca }}</p>
+                <h4 class="text-success">R$ {{ produto.preco }}</h4>
+            </div>
+            <div class="card-footer bg-white border-top-0">
+                <button class="btn btn-primary w-100">Ver Detalhes</button>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-warning">
+            Ainda não há produtos disponíveis no site.
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

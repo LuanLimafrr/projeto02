@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Criar Conta{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white text-center">
+                <h4 class="mb-0">Criar Nova Conta</h4>
+            </div>
+            <div class="card-body p-4">
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">{{ field.label }}</label>
+                        {{ field }} {% if field.help_text %}
+                            <small class="form-text text-muted d-block" style="font-size: 0.8em;">{{ field.help_text }}</small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">Cadastrar</button>
+                    </div>
+                </form>
+
+            </div>
+            <div class="card-footer text-center">
+                Já tem conta? <a href="{% url 'login' %}">Faça Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var inputs = document.querySelectorAll('input');
+    inputs.forEach(function(input) {
+        input.classList.add('form-control');
+    });
+</script>
+{% endblock %}

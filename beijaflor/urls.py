@@ -17,5 +17,7 @@ urlpatterns = [
     # --- Rotas da Gerência ---
     path('gerencia/', views.gerencia_dashboard, name='gerencia_dashboard'),
     path('gerencia/novo/', views.cadastrar_produto, name='cadastrar_produto'),
+
+    path('cadastro/', views.cadastro, name='cadastro'),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
