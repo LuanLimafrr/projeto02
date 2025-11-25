@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Painel Gerencial{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2>Gerenciamento de Estoque</h2>
+        <p class="text-muted">Bem-vindo à área administrativa da Beija Flor Tintas.</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{% url 'cadastrar_produto' %}" class="btn btn-success btn-lg">
+            + Novo Produto
+        </a>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Foto</th>
+                    <th>Nome</th>
+                    <th>Marca</th>
+                    <th>Preço</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for produto in produtos %}
+                <tr>
+                    <td>
+                        {% if produto.imagem %}
+                            <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}" style="height: 50px; width: 50px; object-fit: cover; border-radius: 5px;">
+                        {% else %}
+                            <span class="text-muted">Sem foto</span>
+                        {% endif %}
+                    </td>
+                    <td class="fw-bold">{{ produto.nome }}</td>
+                    <td>{{ produto.marca }}</td>
+                    <td>R$ {{ produto.preco }}</td>
+                    <td>
+                        {% if produto.disponivel %}
+                            <span class="badge bg-success">Ativo</span>
+                        {% else %}
+                            <span class="badge bg-danger">Inativo</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary">Editar</button>
+                        </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center py-4">
+                        Nenhum produto cadastrado. Clique em "Novo Produto".
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
